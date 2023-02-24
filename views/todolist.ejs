@@ -2,30 +2,33 @@
 
   <div class="box heading">
     <h1>
-      <%= day %>
+      <%= listTitle %>
     </h1>
   </div>
 
   <div class="box">
-    <% items.forEach((item, index)=>{ %>
-      <div class="item">
-        <% let c=(item.chk) ? "checked" : "" %>
-          <input type="checkbox" class="chk" <%=c %> value="<%= index %>">
-            <p>
-              <%= item.name %>
-            </p>
-      </div>
+    <% items.forEach((item)=>{ %>
+      <form method="post" action="/chk">
+        <div class="item">
+          <input type="checkbox" name="checkbox" onChange="this.form.submit()" value="<%= item._id %>">
+          <p>
+            <%= item.text %>
+          </p>
+        </div>
+        <input type="hidden" name="listName" value="<%= listTitle %>">
+      </form>
+
       <% }); %>
 
         <form class="item" method="post" action="/">
-          <input name="item" type="text" autocomplete="off" placeholder="Add items...">
-          <button type="submit">+</button>
+          <input name="itemText" type="text" autocomplete="off" placeholder="Add items...">
+          <button name="listName" class="btn-add" type="submit" value="<%= listTitle %>">+</button>
         </form>
   </div>
 
   <%- include('footer') %>
 
-    <script>
+    <!-- <script>
       $(document).ready(function () {
         $(".chk").click(function (event) {
           $.post("/chk",
@@ -38,4 +41,4 @@
           $.post("/r");
         });
       });
-    </script>
+    </script> -->
