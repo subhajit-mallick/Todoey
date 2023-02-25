@@ -3,23 +3,26 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose')
 const _ = require('lodash');
 
+const config = require(__dirname + "/config.js")
 const today = require(__dirname + "/date.js");
 const date = today.day();
+mongoose.set('strictQuery', true);
 
 const { Schema } = mongoose;
-mongoose.connect('mongodb://localhost:27017/todoeyDB');
+mongoose.connect(config.url);
 const itemSchema = new Schema({
     text: String,
 });
 const Item = mongoose.model('Item', itemSchema);
 const defaultItems = [];
 
-const Prereq = mongoose.model('Prereq', 
-new Schema({ pretext: [String]}), 'prereq');
-Prereq.findById('63f8e85b31906cf1191f4ba7',(err,preDoc)=>{
-    if(err) console.log(err);
-    else{
-        preDoc.pretext.forEach((ptxt)=>{
+const Prereq = mongoose.model('Prereq',
+    new Schema({ pretext: [String] }), 'prereq');
+Prereq.findOne({ name: '__pretext' }, (err, preDoc) => {
+    if (err) console.log(err);
+    else {
+        // console.log(preDoc.pretext.length);
+        preDoc.pretext.forEach((ptxt) => {
             const item = new Item({
                 text: ptxt,
             });
